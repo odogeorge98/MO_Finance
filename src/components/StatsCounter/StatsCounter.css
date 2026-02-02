@@ -1,0 +1,21 @@
+.stats-counter {
+  font-family: var(--font-heading);
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-weight: 700;
+  color: white;
+  line-height: 1;
+}
+
+.stats-counter__prefix,
+.stats-counter__suffix {
+  color: var(--color-accent);
+  font-size: 0.875em;
+}
+
+.stats-counter__value {
+  background: linear-gradient(135deg, #fff, var(--color-gray-300));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 2px;
+}
