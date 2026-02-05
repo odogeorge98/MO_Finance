@@ -4,26 +4,27 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '../../components/Button/Button';
 import { StatsCounter } from '../../components/StatsCounter/StatsCounter';
 import './Testimonials.css';
-import img from './img1.png';
+
+// Import testimonial images (assuming you have these files in the same folder)
+import testimonial1 from './tes1.jpeg';
+import testimonial2 from './tes2.jpeg';
+import testimonial3 from './tes3.jpeg';
+import testimonial4 from './tes4.jpeg';
+import testimonial5 from './tes5.jpeg';
+import testimonial6 from './tes6.jpeg';
 
 // React Icons Imports
 import {
   FaStar,
-  FaQuoteLeft,
-  FaQuoteRight,
   FaHeart,
   FaRocket,
   FaChevronRight,
   FaPlay,
-
-  FaCalendarAlt,
-  FaMapMarkerAlt,
   FaShieldAlt,
   FaAward
 } from 'react-icons/fa';
 import {
   BsShieldCheck,
-  BsFillCheckCircleFill,
   BsCurrencyDollar,
   BsGraphUp,
   BsPeople
@@ -34,8 +35,7 @@ type Testimonial = {
   name: string;
   role: string;
   company: string;
-  content: string;
-  avatar: string;
+  screenshot: string;
   rating: number;
   date: string;
   location: string;
@@ -45,92 +45,92 @@ type Testimonial = {
 
 export const Testimonials: React.FC = () => {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const testimonials: Testimonial[] = [
     {
       id: 1,
-      name: 'Engr Benjamin',
+      name: 'James',
       role: 'Investment Student',
-      company: 'Financial Freedom Academy',
-      content: 'Wow! I must say these sessions were nothing short of explicit. It opened my eyes to see patterns you won\'t see randomly. Although I was nervous when it came time to make the payment. Why? I didn\'t want to fall victim to a scam. But I\'m ecstatic that I wasn\'t. And the lectures went beyond and above my expectations. Thanks immensely for your potent teachings. It\'s something I\'ll always carry the rest of my life.',
-      avatar: img,
+      company: '',
+      screenshot: testimonial1,
       rating: 5,
       date: 'December 15, 2025',
       location: 'Abuja, Nigeria',
       verified: true,
       achievements: [
-        'Mastered investment pattern recognition',
-        'Confidently managing personal portfolio',
-        'Applying lessons to daily financial decisions'
+        
       ]
     },
     {
       id: 2,
-      name: 'Augustus Osunwa',
+      name: 'Favour',
       role: 'Investment Student',
-      company: 'Financial Freedom Academy',
-      content: 'I just finished the videos, I\'d be sending my portfolio breakdown before today\'s end. The videos are detailed enough, the duration encourages commitment too. The highlight for me was when we got to that revenue part and broke it down. I didn\'t see that part coming and its actually a key aspect in determining if a company is a good buy.',
-      avatar: img,
+      company: '',
+      screenshot: testimonial2,
       rating: 5,
       date: 'November 10, 2025',
       location: 'Lagos, Nigeria',
       verified: true,
       achievements: [
-        'Completed comprehensive video course',
-        'Preparing portfolio analysis',
-        'Learned company valuation techniques'
+       
       ]
     },
     {
       id: 3,
-      name: 'Favour',
+      name: 'Augustus Osunwa',
       role: 'Investment Student',
-      company: 'Financial Freedom Academy',
-      content: 'Thank you so much Mr Moses. This session was worth every dime I spent and way much more when compared to the value I got from this session with you. You\'ve really shifted my perspective on financial intelligence/management which a lot people out there pay heavily for. I am glad I enrolled for this class.',
-      avatar: img,
+      company: '',
+      screenshot: testimonial3,
       rating: 5,
       date: 'January 5, 2026',
       location: 'Port Harcourt, Nigeria',
       verified: true,
       achievements: [
-        'Transformed financial perspective',
-        'Mastered financial intelligence principles',
-        'Recognized exceptional value received'
+       
       ]
     },
     {
       id: 4,
-      name: 'James',
+      name: 'Engr Benjamin',
       role: 'Investment Student',
-      company: 'Financial Freedom Academy',
-      content: 'Started off with the intention of "I want to make investments in the stock market" I didn\'t know where or how to start really. There was so much information online, but none was able to break it down as you have. Paying for this class, really is an investment already. Thank you so much Moses.',
-      avatar: img,
+      company: '',
+      screenshot: testimonial4,
       rating: 5,
       date: 'February 2, 2026',
       location: 'Calabar, Nigeria',
       verified: true,
       achievements: [
-        'Found clear direction for investing',
-        'Overcame information overload',
-        'Made first successful investments'
+        
       ]
     },
     {
       id: 5,
       name: 'Engr Benjamin',
       role: 'Investment Student',
-      company: 'Financial Freedom Academy',
-      content: 'First, thanks immensely for this potent class, Moses. It really portrayed the lessons from Rich Dad, Poor Dad. The rich buy assets while the poor buy liabilities. Overall, I enjoyed how you broke every section down using analogies.',
-      avatar: img,
+      company: '',
+      screenshot: testimonial5,
       rating: 5,
       date: 'January 20, 2026',
       location: 'Abuja, Nigeria',
       verified: true,
       achievements: [
-        'Applied Rich Dad Poor Dad principles',
-        'Mastered asset vs liability concepts',
-        'Understood complex concepts through analogies'
+        
+      ]
+    },
+     {
+      id: 6,
+      name: 'Mary',
+      role: 'Investment Student',
+      company: '',
+      screenshot: testimonial6,
+      rating: 5,
+      date: 'February 2, 2026',
+      location: 'Calabar, Nigeria',
+      verified: true,
+      achievements: [
+       
       ]
     }
   ];
@@ -181,6 +181,21 @@ export const Testimonials: React.FC = () => {
     window.open('https://youtube.com/@mosesmfonudofia?si=Nob6BWPBX82xVwwo', '_blank', 'noopener,noreferrer');
   };
 
+  // Handle image click for modal
+  const handleImageClick = (screenshot: string) => {
+    setSelectedImage(screenshot);
+  };
+
+  // Close modal
+  const handleCloseModal = () => {
+    setSelectedImage(null);
+  };
+
+  // Prevent modal close when clicking on content
+  const handleModalContentClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
   return (
     <div className="testimonials-page">
       {/* Hero Section */}
@@ -197,8 +212,8 @@ export const Testimonials: React.FC = () => {
             </h1>
             
             <p className="testimonials-hero__description">
-              Hear from our community of investors who have transformed their financial 
-              futures with our cutting-edge courses and expert guidance.
+              See what our students are saying through their real WhatsApp conversations.
+              Authentic testimonials from real investors who transformed their financial futures.
             </p>
             
             <div className="testimonials-hero__stats">
@@ -276,10 +291,13 @@ export const Testimonials: React.FC = () => {
         <div className="container">
           <div className="testimonials-grid__header">
             <h2 className="testimonials-grid__title">
-              Real Results, Real People
+              Real WhatsApp Testimonials
             </h2>
             <p className="testimonials-grid__subtitle">
-              Meet the investors who are redefining success
+              Authentic conversations from our satisfied students
+            </p>
+            <p className="testimonials-grid__instruction">
+              Click on any testimonial to view it larger
             </p>
           </div>
 
@@ -292,16 +310,15 @@ export const Testimonials: React.FC = () => {
                 }`}
                 onMouseEnter={() => setHoveredCard(testimonial.id)}
                 onMouseLeave={() => setHoveredCard(null)}
+                onClick={() => handleImageClick(testimonial.screenshot)}
               >
                 <div className="testimonial-card__glow"></div>
                 
                 <div className="testimonial-card__header">
                   <div className="testimonial-card__avatar">
-                    <img
-                      src={testimonial.avatar}
-                      alt={testimonial.name}
-                      className="testimonial-card__avatar-image"
-                    />
+                    <div className="testimonial-card__avatar-placeholder">
+                      {testimonial.name.charAt(0)}
+                    </div>
                     {testimonial.verified && (
                       <div className="testimonial-card__verified">
                         <BsShieldCheck />
@@ -322,44 +339,59 @@ export const Testimonials: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="testimonial-card__content">
-                  <div className="testimonial-card__quote">
-                    <FaQuoteLeft className="testimonial-card__quote-icon quote-left" />
-                    <p className="testimonial-card__text">
-                      {testimonial.content}
-                    </p>
-                    <FaQuoteRight className="testimonial-card__quote-icon quote-right" />
-                  </div>
-
-                  <div className="testimonial-card__rating">
-                    <div className="testimonial-card__stars">
-                      {renderStars(testimonial.rating)}
-                    </div>
-                    <div className="testimonial-card__meta">
-                      <span className="testimonial-card__meta-item">
-                        <FaMapMarkerAlt /> {testimonial.location}
-                      </span>
-                      <span className="testimonial-card__meta-item">
-                        <FaCalendarAlt /> {testimonial.date}
+                <div className="testimonial-card__screenshot-container">
+                  <div className="testimonial-card__screenshot-frame">
+                    <img
+                      src={testimonial.screenshot}
+                      alt={`Testimonial from ${testimonial.name}`}
+                      className="testimonial-card__screenshot"
+                      loading="lazy"
+                    />
+                    <div className="testimonial-card__screenshot-overlay">
+                      <span className="testimonial-card__view-text">
+                        Click to view
                       </span>
                     </div>
                   </div>
-
-                  {testimonial.achievements && testimonial.achievements.length > 0 && (
-                    <div className="testimonial-card__achievements">
-                      <div className="testimonial-card__achievements-title">
-                        <FaAward /> Key Takeaways
+                  
+                  <div className="testimonial-card__screenshot-info">
+                    <div className="testimonial-card__rating">
+                      <div className="testimonial-card__stars">
+                        {renderStars(testimonial.rating)}
                       </div>
-                      <ul className="testimonial-card__achievements-list">
-                        {testimonial.achievements.slice(0, 2).map((achievement, idx) => (
-                          <li key={idx} className="testimonial-card__achievement">
-                            <BsFillCheckCircleFill /> {achievement}
-                          </li>
-                        ))}
-                      </ul>
+                      <div className="testimonial-card__date">
+                        {testimonial.date}
+                      </div>
                     </div>
-                  )}
+                    
+                    <div className="testimonial-card__location">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                        <circle cx="12" cy="10" r="3"/>
+                      </svg>
+                      {testimonial.location}
+                    </div>
+                  </div>
                 </div>
+
+                {testimonial.achievements && testimonial.achievements.length > 0 && (
+                  <div className="testimonial-card__achievements">
+                    <div className="testimonial-card__achievements-title">
+                      <FaAward /> Key Takeaways
+                    </div>
+                    <ul className="testimonial-card__achievements-list">
+                      {testimonial.achievements.slice(0, 2).map((achievement, idx) => (
+                        <li key={idx} className="testimonial-card__achievement">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                            <polyline points="22 4 12 14.01 9 11.01"/>
+                          </svg>
+                          {achievement}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -478,8 +510,6 @@ export const Testimonials: React.FC = () => {
                 <FaPlay /> Watch Free Preview
               </Button>
             </div>
-            
-           
           </div>
         </div>
         
@@ -490,6 +520,30 @@ export const Testimonials: React.FC = () => {
           <div className="cta-particle cta-particle--4"></div>
         </div>
       </section>
+
+      {/* Image Modal */}
+      {selectedImage && (
+        <div className="image-modal" onClick={handleCloseModal}>
+          <div className="image-modal__content" onClick={handleModalContentClick}>
+            <button className="image-modal__close" onClick={handleCloseModal}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
+            <img 
+              src={selectedImage} 
+              alt="Testimonial screenshot" 
+              className="image-modal__image"
+            />
+            <div className="image-modal__controls">
+              <button className="image-modal__control-btn" onClick={handleCloseModal}>
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

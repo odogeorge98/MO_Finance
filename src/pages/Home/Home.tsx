@@ -3,14 +3,17 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../../components/Button/Button';
 import { StatsCounter } from '../../components/StatsCounter/StatsCounter';
-import { FeatureCard } from '../../components/Card/FeatureCard';
-import { TestimonialCard } from '../../components/Card/TestimonialCard';
 import './Home.css';
-import img from './img1.png';
+
+// Import testimonial images
+import testimonial1 from './tes1.jpeg';
+import testimonial2 from './tes2.jpeg';
+import testimonial3 from './tes3.jpeg';
+import img2 from './img2.png';
+import heroImage from './hero.png';
 
 // React Icons Imports
 import {
-  FaGem,
   FaPlay,
   FaBookOpen,
   FaRocket,
@@ -20,10 +23,8 @@ import {
   FaSyncAlt,
   FaHandshake,
   FaClock,
-  FaUser,
   FaStar,
   FaRegStar,
-  FaChartLine,
   FaCheck,
   FaChevronRight,
   FaGift,
@@ -33,31 +34,44 @@ import {
   FaChevronLeft,
   FaCreditCard,
   FaUniversity,
-  FaPhoneAlt
+  FaPhoneAlt,
+  FaUsers,
+  FaSearch,
+  FaBolt,
+  FaCalendarAlt,
+  FaFire,
+  FaDollarSign,
+  FaBitcoin,
+  FaEthereum,
+  FaUserTie,
+  FaUserFriends,
+  FaVideo as FaVideoIcon,
+  FaChartLine
 } from 'react-icons/fa';
 import {
-  GiTakeMyMoney,
-  GiChart,
-  GiMoneyStack,
-  GiCrystalBars,
-} from 'react-icons/gi';
-import {
-  BsGraphUp,
-  BsCurrencyExchange,
   BsShieldCheck,
   BsCheckCircleFill,
   BsArrowRight,
-
+  BsPlayCircle
 } from 'react-icons/bs';
-
-import { MdOutlineWorkspacePremium } from 'react-icons/md';
-
+import {
+  GiTeacher,
+  GiCash,
+  GiGoldBar
+} from 'react-icons/gi';
+import {
+  MdOutlineWorkspacePremium
+} from 'react-icons/md';
+import {
+  IoDiamond
+} from 'react-icons/io5';
 
 type Stat = {
   value: number;
   label: string;
   prefix?: string;
   suffix?: string;
+  icon?: React.ReactNode;
 };
 
 type Course = {
@@ -65,15 +79,24 @@ type Course = {
   title: string;
   description: string;
   duration: number;
-  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
+  difficulty: string;
   thumbnail: string;
-  videoUrl: string;
   instructor: string;
   rating: number;
   category: string;
   students: number;
-  icon?: React.ReactNode;
   priceInNaira: number;
+  modules?: number;
+  isFeatured?: boolean;
+  icon?: React.ReactNode;
+  videoId?: string;
+  tags?: string[];
+  format?: string;
+  sessionDays?: number;
+  sessionHours?: number;
+  totalHours?: number;
+  totalVideos?: number;
+  features?: string[];
   priceDetails?: {
     naira: string;
     usd: string;
@@ -93,9 +116,12 @@ type Testimonial = {
   name: string;
   role: string;
   company: string;
-  content: string;
-  avatar: string;
+  screenshot: string;
   rating: number;
+  location: string;
+  date: string;
+  verified: boolean;
+  achievements?: string[];
 };
 
 interface PaymentDetails {
@@ -111,6 +137,9 @@ export const Home: React.FC = () => {
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [carouselStep, setCarouselStep] = useState<number>(0);
   const [copiedField, setCopiedField] = useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   const heroRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -124,7 +153,7 @@ export const Home: React.FC = () => {
   };
 
   // Conversion rate (approximate)
-  const ngnToUsd = 0.0007; // 1 NGN = 0.0007 USD
+  const ngnToUsd = 0.0007;
 
   const formatPrice = (priceInNaira: number) => {
     const priceInUsd = priceInNaira * ngnToUsd;
@@ -134,64 +163,107 @@ export const Home: React.FC = () => {
     };
   };
 
+  // Mouse tracking
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
   const statsData: Stat[] = [
-    { value: 3, label: 'Premium Courses', suffix: '+' },
-    { value: 100, label: 'Students Enrolled', suffix: '+' },
-    { value: 12, label: 'Hours of Content', suffix: 'h+' },
+    { 
+      value: 3, 
+      label: 'Courses', 
+      suffix: '+',
+      icon: <MdOutlineWorkspacePremium />
+    },
+    { 
+      value: 12, 
+      label: 'Hours of Content', 
+      suffix: 'h+',
+      icon: <FaClock />
+    },
+     { 
+      value: 12, 
+      label: 'Hours of Content', 
+      suffix: 'h+',
+      icon: <FaClock />
+    },
   ];
 
   const allCourses: Course[] = [
     {
       id: '1',
-      title: 'Wealth Fundamentals',
-      description: 'Master personal budgeting, debt management, and financial goal setting',
-      duration: 120,
-      difficulty: 'Beginner',
-      thumbnail: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=600',
-      videoUrl: '#',
-      instructor: 'Alex Johnson, CFA',
+      title: 'Personalized Training Session',
+      description: 'Live one-on-one session with expert guidance. Perfect for focused learning and personalized feedback.',
+      duration: 180,
+      difficulty: 'Advanced',
+      thumbnail: 'https://images.unsplash.com/photo-1559136555-9303baea8ebd?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+      instructor: 'Moses Mfon Udofia',
       rating: 4.9,
-      category: 'Personal Finance',
-      students: 342,
-      priceInNaira: 15000,
-      icon: <GiTakeMyMoney />
+      category: 'One-on-One',
+      students: 156,
+      priceInNaira: 20000,
+      modules: 4,
+      isFeatured: true,
+      icon: <FaUserTie />,
+      videoId: 'personalized-training',
+      tags: ['Live Session', 'Personalized', 'Expert Feedback', 'Real-time'],
+      format: 'Live One-on-One',
+      sessionDays: 2,
+      sessionHours: 1.5,
+      totalHours: 3,
+      priceDetails: formatPrice(20000)
     },
     {
       id: '2',
-      title: 'Stock Market Pro',
-      description: 'Advanced technical analysis, options trading, and portfolio management',
+      title: 'Structured Group Training',
+      description: 'Collaborative learning environment for groups of 5. Share insights and learn together.',
       duration: 180,
-      difficulty: 'Advanced',
-      thumbnail: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=600',
-      videoUrl: '#',
-      instructor: 'Maria Chen, MBA',
+      difficulty: 'Intermediate',
+      thumbnail: 'https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+      instructor: 'Moses Mfon Udofia',
       rating: 4.8,
-      category: 'Stock Trading',
+      category: 'Group Training',
       students: 287,
-      priceInNaira: 25000,
-      icon: <FaChartLine />
+      priceInNaira: 15000,
+      modules: 4,
+      isFeatured: true,
+      icon: <FaUserFriends />,
+      videoId: 'group-training',
+      tags: ['Group Learning', 'Collaborative', 'Cost-Effective', 'Team Building'],
+      format: 'Group (5 People)',
+      sessionDays: 2,
+      sessionHours: 1.5,
+      totalHours: 3,
+      priceDetails: formatPrice(15000)
     },
     {
       id: '3',
-      title: 'Crypto Futures Masterclass',
-      description: 'Blockchain fundamentals, cryptocurrency trading, and DeFi strategies',
-      duration: 150,
-      difficulty: 'Intermediate',
-      thumbnail: 'https://images.unsplash.com/photo-1620336655055-bd87c5d1d73f?auto=format&fit=crop&w=600',
-      videoUrl: '#',
-      instructor: 'David Park, Crypto Analyst',
+      title: 'Prerecorded Training Sessions',
+      description: 'Comprehensive video library for self-paced learning. Access anytime, anywhere.',
+      duration: 120,
+      difficulty: 'Beginner',
+      thumbnail: img2,
+      instructor: 'Moses Mfon Udofia',
       rating: 4.7,
-      category: 'Cryptocurrency',
+      category: 'Self-Paced',
       students: 415,
-      priceInNaira: 20000,
-      icon: <BsCurrencyExchange />
-    },
+      priceInNaira: 10000,
+      modules: 6,
+      isFeatured: true,
+      icon: <FaVideoIcon />,
+      videoId: 'prerecorded-training',
+      tags: ['Self-Paced', 'Lifetime Access', 'Flexible Learning', 'Video Library'],
+      format: 'Prerecorded Videos',
+      totalVideos: 6,
+      totalHours: 2,
+      priceDetails: formatPrice(10000)
+    }
   ];
-
-  // Format prices for all courses
-  allCourses.forEach(course => {
-    course.priceDetails = formatPrice(course.priceInNaira);
-  });
 
   const features: Feature[] = [
     {
@@ -241,30 +313,39 @@ export const Home: React.FC = () => {
   const testimonials: Testimonial[] = [
     {
       id: 1,
-      name: 'Engr Benjamin',
+      name: 'James',
       role: 'Investment Student',
-      company: 'Financial Freedom Academy',
-      content: 'Wow! I must say these sessions were nothing short of explicit. It opened my eyes to see patterns you won\'t see randomly. Although I was nervous when it came time to make the payment. Why? I didn\'t want to fall victim to a scam. But I\'m ecstatic that I wasn\'t. And the lectures went beyond and above my expectations. Thanks immensely for your potent teachings. It\'s something I\'ll always carry the rest of my life.',
-      avatar: img ,
+      company: '',
+      screenshot: testimonial1,
       rating: 5,
+      date: 'December 15, 2025',
+      location: 'Abuja, Nigeria',
+      verified: true,
+      achievements: []
     },
     {
       id: 2,
-      name: 'Augustus Osunwa',
+      name: 'Favour',
       role: 'Investment Student',
-      company: 'Financial Freedom Academy',
-      content: 'I just finished the videos, I\'d be sending my portfolio breakdown before today\'s end. The videos are detailed enough, the duration encourages commitment too. The highlight for me was when we got to that revenue part and broke it down. I didn\'t see that part coming and its actually a key aspect in determining if a company is a good buy.',
-      avatar: img,
+      company: '',
+      screenshot: testimonial2,
       rating: 5,
+      date: 'November 10, 2025',
+      location: 'Lagos, Nigeria',
+      verified: true,
+      achievements: []
     },
     {
       id: 3,
-      name: 'Favour',
+      name: 'Augustus Osunwa',
       role: 'Investment Student',
-      company: 'Financial Freedom Academy',
-      content: 'Thank you so much Mr Moses. This session was worth every dime I spent and way much more when compared to the value I got from this session with you. You\'ve really shifted my perspective on financial intelligence/management which a lot people out there pay heavily for. I am glad I enrolled for this class.',
-      avatar: img,
+      company: '',
+      screenshot: testimonial3,
       rating: 5,
+      date: 'January 5, 2026',
+      location: 'Port Harcourt, Nigeria',
+      verified: true,
+      achievements: []
     },
   ];
 
@@ -279,6 +360,19 @@ export const Home: React.FC = () => {
         )}
       </span>
     ));
+  };
+
+  const getDifficultyColor = (difficulty: string) => {
+    switch (difficulty.toLowerCase()) {
+      case 'beginner':
+        return '#00ff88';
+      case 'intermediate':
+        return '#00d4ff';
+      case 'advanced':
+        return '#ff0080';
+      default:
+        return '#6b7280';
+    }
   };
 
   const handleWatchPreview = () => {
@@ -306,6 +400,25 @@ export const Home: React.FC = () => {
     window.open(whatsappUrl, '_blank');
   };
 
+  const handlePlayPreview = (courseId: string) => {
+    alert(`Playing preview for course: ${courseId}`);
+  };
+
+  // Handle image click for modal
+  const handleImageClick = (screenshot: string) => {
+    setSelectedImage(screenshot);
+  };
+
+  // Close modal
+  const handleCloseModal = () => {
+    setSelectedImage(null);
+  };
+
+  // Prevent modal close when clicking on content
+  const handleModalContentClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
   useEffect(() => {
     // Trigger hero animations
     const timer = setTimeout(() => {
@@ -328,7 +441,7 @@ export const Home: React.FC = () => {
     animatedElements.forEach((el) => observer.observe(el));
 
     // Handle modal scroll
-    if (showPaymentModal) {
+    if (showPaymentModal || selectedImage) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
@@ -339,7 +452,7 @@ export const Home: React.FC = () => {
       observer.disconnect();
       document.body.style.overflow = 'unset';
     };
-  }, [showPaymentModal]);
+  }, [showPaymentModal, selectedImage]);
 
   const renderPaymentModal = () => {
     if (!showPaymentModal || !selectedCourse) return null;
@@ -385,7 +498,7 @@ export const Home: React.FC = () => {
                 </div>
                 <div className="summary-item">
                   <span>Format:</span>
-                  <span>Self-Paced Online Course</span>
+                  <span>{selectedCourse.format}</span>
                 </div>
               </div>
             </div>
@@ -706,81 +819,63 @@ export const Home: React.FC = () => {
 
   return (
     <div className="home">
-      {/* Hero Section */}
-      <section ref={heroRef} className={`hero ${isHeroLoaded ? 'hero--loaded' : ''}`}>
+      {/* Home Hero Section */}
+      <section ref={heroRef} className={`home-hero ${isHeroLoaded ? 'home-hero--loaded' : ''}`}>
         <div className="container">
-          <div className="hero__content">
-            <div className="hero__badge animate-on-scroll">
-              <span className="hero__badge-icon">
-                <FaGem />
-              </span>
-              <span className="hero__badge-text">TRUSTED BY 1,250+ INVESTORS</span>
+          <div className="home-hero-grid">
+            {/* Hero Image - First on mobile */}
+            <div className="home-hero-image-container">
+              <div className="home-hero-image-wrapper">
+                <img 
+                  src={heroImage} 
+                  alt="Master Financial Markets" 
+                  className="home-hero-image"
+                  loading="eager"
+                />
+                <div className="home-hero-image-glow"></div>
+                <div className="home-hero-image-shape shape-1"></div>
+                <div className="home-hero-image-shape shape-2"></div>
+                <div className="home-hero-image-shape shape-3"></div>
+              </div>
             </div>
 
-            <h1 className="hero__title animate-on-scroll">
-              Personal  <span className="hero__title-highlight">Finance</span> &
-              <span className="hero__title-break"> Stock Market</span>
-            </h1>
+            {/* Hero Content */}
+            <div className="home-hero-content">
+              <h1 className="home-hero-title">
+                <span className="home-title-line">Personal Finance</span>
+                <span className="home-title-line">Stock Market</span>
+              </h1>
 
-            <p className="hero__description animate-on-scroll">
-              Tired of consistently making money? Are you ready to make your money work for you? If that is the case you came to the right source
-            </p>
+              <p className="home-hero-description">
+               Tired of consistently making money? Are you ready to make your money work for you? If that is the case you came to the right source
+              </p>
 
-            <div className="hero__actions animate-on-scroll">
-              <Button
-                variant="primary"
-                size="lg"
-                className="hero__cta-primary"
-                onClick={handleWatchPreview}
-              >
-                <span className="hero__action-icon">
-                  <FaPlay />
-                </span>
-                Watch Free Preview
-              </Button>
-              <Button variant="outline" size="lg" className="hero__cta-secondary" onClick={() => navigate('/courses')}>
-                <span className="hero__action-icon">
-                  <FaBookOpen />
-                </span>
-                Training Sessions
-              </Button>
+              {/* Hero CTA Buttons - Updated with proper navigation */}
+              <div className="home-hero-actions">
+                <button
+                  className="home-hero-cta-primary"
+                  onClick={handleWatchPreview}
+                >
+                  <span className="home-hero-action-icon">
+                    <FaPlay />
+                  </span>
+                  View Course Preview
+                  <FaChevronRight />
+                </button>
+                <button 
+                  className="home-hero-cta-secondary"
+                  onClick={() => navigate('/courses')}
+                >
+                  <span className="home-hero-action-icon">
+                    <FaChartLine />
+                  </span>
+                  Explore Courses
+                </button>
+              </div>
+
+              {/* Hero Stats */}
+              
             </div>
-
-            <div className="hero__stats-mobile animate-on-scroll">
-              {statsData.map((stat) => (
-                <div key={stat.label} className="hero__stat-mobile">
-                  <StatsCounter
-                    endValue={stat.value}
-                    duration={2000}
-                    prefix={stat.prefix}
-                    suffix={stat.suffix}
-                  />
-                  <span className="hero__stat-label">{stat.label}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="hero__background">
-          <div className="hero__orb hero__orb--1"></div>
-          <div className="hero__orb hero__orb--2"></div>
-          <div className="hero__orb hero__orb--3"></div>
-          <div className="hero__grid-overlay"></div>
-        </div>
-
-        <div className="hero__floating-elements">
-          <div className="hero__floating-element element-1">
-            <BsGraphUp />
-          </div>
-          <div className="hero__floating-element element-2">
-            <GiChart />
-          </div>
-          <div className="hero__floating-element element-3">
-            <GiMoneyStack />
-          </div>
-          <div className="hero__floating-element element-4">
-            <GiCrystalBars />
           </div>
         </div>
       </section>
@@ -795,20 +890,19 @@ export const Home: React.FC = () => {
                 className="stats__item animate-on-scroll"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                <div className="stats__icon-container">
-                  <div className="stats__icon-bg"></div>
+                <div className="stats__icon-wrapper">
                   <div className="stats__icon">
-                    {index === 0 && <MdOutlineWorkspacePremium />}
-                    {index === 1 && <FaUser />}
-                    {index === 2 && <FaClock />}
+                    {stat.icon}
                   </div>
                 </div>
-                <StatsCounter
-                  endValue={stat.value}
-                  duration={2000}
-                  prefix={stat.prefix}
-                  suffix={stat.suffix}
-                />
+                <div className="stats__value">
+                  <StatsCounter
+                    endValue={stat.value}
+                    duration={2000}
+                    prefix={stat.prefix}
+                    suffix={stat.suffix}
+                  />
+                </div>
                 <span className="stats__label">{stat.label}</span>
               </div>
             ))}
@@ -819,93 +913,185 @@ export const Home: React.FC = () => {
       {/* Courses Section */}
       <section className="courses" id="courses">
         <div className="container">
-          <div className="courses__header animate-on-scroll">
-            <div className="courses__badge">Featured Curriculum</div>
-            <h2 className="courses__title">Master Your Financial Future</h2>
-            <p className="courses__subtitle">
-              Comprehensive courses designed by industry experts with AI-powered learning paths
-            </p>
+          <div className="grid-header">
+            <div className="header-left">
+              <h2 className="grid-title">
+                <span className="title-text">Training Programs</span>
+                <div className="title-line"></div>
+              </h2>
+              <p className="grid-subtitle">Choose the learning style that matches your goals and schedule</p>
+            </div>
+            <div className="header-stats">
+              <div className="stat">
+                <div className="stat-content">
+                  <span className="stat-value">{allCourses.length}</span>
+                  <span className="stat-label">Programs</span>
+                </div>
+                <div className="stat-icon"><FaBolt /></div>
+              </div>
+              <div className="stat">
+                <div className="stat-content">
+                  <span className="stat-value">{allCourses.reduce((acc, course) => acc + course.students, 0).toLocaleString()}+</span>
+                  <span className="stat-label">Students Trained</span>
+                </div>
+                <div className="stat-icon"><FaUsers /></div>
+              </div>
+            </div>
           </div>
 
-          <div className="courses__grid">
+          {/* Courses Grid */}
+          <div className="course-grid">
             {allCourses.map((course, index) => (
               <div
                 key={course.id}
-                className="course-card animate-on-scroll"
-                style={{ animationDelay: `${index * 100}ms` }}
+                className={`course-card ${hoveredCard === course.id ? 'hovered' : ''}`}
+                onMouseEnter={() => setHoveredCard(course.id)}
+                onMouseLeave={() => setHoveredCard(null)}
+                style={{ 
+                  ['--mouse-x' as any]: `${mousePosition.x}px`, 
+                  ['--mouse-y' as any]: `${mousePosition.y}px` 
+                } as React.CSSProperties}
               >
-                <div className="course-card__header">
-                  <div className="course-card__category">
-                    <span className="course-card__category-icon">
+                {/* Card Glow Effect */}
+                <div className="card-glow"></div>
+
+                {/* Card Header with Video Preview */}
+                <div className="card-header">
+                  <div className="card-badges">
+                    {course.isFeatured && (
+                      <div className="badge featured">
+                        <FaFire />
+                      </div>
+                    )}
+                    <div className="badge category">
                       {course.icon}
-                    </span>
-                    {course.category}
-                  </div>
-                  <div className="course-card__difficulty">
-                    <span className={`difficulty-dot difficulty-${course.difficulty.toLowerCase()}`}></span>
-                    {course.difficulty}
-                  </div>
-                </div>
-
-                <div className="course-card__image-wrapper">
-                  <img
-                    src={course.thumbnail}
-                    alt={course.title}
-                    className="course-card__image"
-                    loading="lazy"
-                  />
-                  <div className="course-card__overlay">
-                    <button className="course-card__play-btn" aria-label="Play preview">
-                      <FaPlay />
-                    </button>
-                  </div>
-                  <div className="course-card__duration">
-                    <FaClock /> {course.duration} min
-                  </div>
-                </div>
-
-                <div className="course-card__content">
-                  <div className="course-card__meta">
-                    <div className="course-card__instructor">
-                      <span className="course-card__instructor-avatar">
-                        <FaUser />
-                      </span>
-                      {course.instructor}
-                    </div>
-                    <div className="course-card__rating">
-                      <span className="course-card__stars">
-                        {renderStars(course.rating)}
-                      </span>
-                      <span className="course-card__rating-value">{course.rating}</span>
-                      <span className="course-card__students">({course.students})</span>
+                      <span>{course.category}</span>
                     </div>
                   </div>
 
-                  <h3 className="course-card__title">{course.title}</h3>
-                  <p className="course-card__description">{course.description}</p>
-
-                  <div className="course-card__footer">
-                    <div className="course-card__pricing">
-                      <div className="course-price">
-                        {course.priceDetails?.naira}
-                        <span className="price-note">One-time payment</span>
+                  {/* Video Container */}
+                  <div className="video-container">
+                    <div className="video-wrapper">
+                      <img
+                        src={course.thumbnail}
+                        alt={course.title}
+                        className="video-thumbnail"
+                      />
+                      <div className="video-overlay">
+                        <div className="play-button" onClick={() => handlePlayPreview(course.id)}>
+                          <BsPlayCircle />
+                          <div className="play-ring"></div>
+                          <div className="play-ring play-ring-delay"></div>
+                        </div>
+                        <div className="video-info">
+                          <span>{course.format?.split(' ')[0]}</span>
+                          <span>{course.difficulty}</span>
+                        </div>
+                      </div>
+                      <div className="video-time">
+                        <FaClock />
+                        <span>{Math.floor(course.duration / 60)}h {course.duration % 60}m</span>
                       </div>
                     </div>
-                    <Button variant="primary" size="sm" fullWidth onClick={() => handleEnrollClick(course)}>
-                      Enroll Now
-                      <FaChevronRight className="btn-icon-right" />
-                    </Button>
+                  </div>
+                </div>
+
+                {/* Card Content */}
+                <div className="card-content">
+                  <div className="course-meta">
+                    <div className="difficulty">
+                      <div
+                        className="difficulty-dot"
+                        style={{ backgroundColor: getDifficultyColor(course.difficulty) }}
+                      ></div>
+                      <span>{course.difficulty}</span>
+                    </div>
+                    <div className="meta-item">
+                      <FaCalendarAlt />
+                      <span>
+                        {course.sessionDays ? `${course.sessionDays} Days` : `${course.totalVideos ?? 0} Videos`}
+                      </span>
+                    </div>
+                  </div>
+
+                  <h3 className="course-title">{course.title}</h3>
+                  <p className="course-description">{course.description}</p>
+
+                  {/* Course Specific Details */}
+                  <div className="course-stats">
+                    <div className="stat-item">
+                      <div className="stat-icon-small">
+                        {course.icon}
+                      </div>
+                      <div className="stat-text">
+                        <div className="stat-number">{course.format}</div>
+                        <div className="stat-label">Training Format</div>
+                      </div>
+                    </div>
+                    <div className="stat-item">
+                      <div className="stat-icon-small">
+                        <FaClock />
+                      </div>
+                      <div className="stat-text">
+                        <div className="stat-number">
+                          {course.sessionDays ? 
+                            `${course.totalHours} Total Hours` : 
+                            `${course.totalHours} Hours`
+                          }
+                        </div>
+                        <div className="stat-label">Total Duration</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Features List */}
+                  <div className="course-tags">
+                    {course.features?.map((feature, i) => (
+                      <span key={i} className="tag">{feature}</span>
+                    ))}
+                  </div>
+
+                  {/* Instructor */}
+                  <div className="instructor-info">
+                    <div className="instructor-avatar">
+                      <GiTeacher />
+                      <div className="avatar-glow"></div>
+                    </div>
+                    <div className="instructor-details">
+                      <div className="instructor-name">{course.instructor}</div>
+                      <div className="instructor-rating">
+                        {renderStars(course.rating)}
+                        <span>{course.rating}/5.0</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Price & Action */}
+                  <div className="card-footer">
+                    <div className="pricing">
+                      <div className="original-price">{course.priceDetails?.usd}</div>
+                      <div className="current-price">
+                        {course.priceDetails?.naira}
+                        <div className="discount-badge">
+                          {course.category === 'One-on-One' ? 'Premium' : 
+                           course.category === 'Group Training' ? 'Best Value' : 'Self-Paced'}
+                        </div>
+                      </div>
+                    </div>
+                    <button 
+                      className="enroll-button"
+                      onClick={() => handleEnrollClick(course)}
+                    >
+                      <span>Enroll Now</span>
+                      <div className="button-icon">
+                        <FaRocket />
+                      </div>
+                      <div className="button-glow"></div>
+                    </button>
                   </div>
                 </div>
               </div>
             ))}
-          </div>
-
-          <div className="courses__cta animate-on-scroll">
-            <Button variant="outline" size="lg" onClick={() => navigate('/courses')}>
-              View All Courses
-              <FaChevronRight className="btn-icon-right" />
-            </Button>
           </div>
         </div>
       </section>
@@ -923,11 +1109,19 @@ export const Home: React.FC = () => {
 
           <div className="features__grid">
             {features.map((feature, index) => (
-              <div className="feature-card-container" key={feature.id}>
-                <FeatureCard
-                  feature={feature}
-                  index={index}
-                />
+              <div 
+                key={feature.id} 
+                className="feature-card animate-on-scroll"
+                style={{ 
+                  animationDelay: `${index * 100}ms`,
+                  borderColor: feature.color 
+                }}
+              >
+                <div className="feature-card__content">
+                  <h3 className="feature-card__title">{feature.title}</h3>
+                  <p className="feature-card__description">{feature.description}</p>
+                  <div className="feature-card__divider" style={{ backgroundColor: feature.color }}></div>
+                </div>
               </div>
             ))}
           </div>
@@ -941,17 +1135,83 @@ export const Home: React.FC = () => {
             <div className="testimonials__badge">Success Stories</div>
             <h2 className="testimonials__title">What Our Students Say</h2>
             <p className="testimonials__subtitle">
-              Join thousands of successful investors who transformed their financial journey
+              See real WhatsApp conversations from our satisfied students
+            </p>
+            <p className="testimonials__instruction">
+              Click on any testimonial to view it larger
             </p>
           </div>
 
           <div className="testimonials__grid">
             {testimonials.map((testimonial, index) => (
-              <TestimonialCard
+              <div
                 key={testimonial.id}
-                testimonial={testimonial}
-                index={index}
-              />
+                className="testimonial-image-card animate-on-scroll"
+                style={{ animationDelay: `${index * 100}ms` }}
+                onClick={() => handleImageClick(testimonial.screenshot)}
+              >
+                <div className="testimonial-image-card__wrapper">
+                  <div className="testimonial-image-card__header">
+                    <div className="testimonial-image-card__avatar">
+                      <div className="testimonial-image-card__avatar-placeholder">
+                        {testimonial.name.charAt(0)}
+                      </div>
+                      {testimonial.verified && (
+                        <div className="testimonial-image-card__verified">
+                          <BsShieldCheck />
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="testimonial-image-card__info">
+                      <h3 className="testimonial-image-card__name">
+                        {testimonial.name}
+                      </h3>
+                      <div className="testimonial-image-card__role">
+                        {testimonial.role}
+                      </div>
+                      <div className="testimonial-image-card__company">
+                        {testimonial.company}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="testimonial-image-card__screenshot-container">
+                    <div className="testimonial-image-card__screenshot-frame">
+                      <img
+                        src={testimonial.screenshot}
+                        alt={`Testimonial from ${testimonial.name}`}
+                        className="testimonial-image-card__screenshot"
+                        loading="lazy"
+                      />
+                      <div className="testimonial-image-card__screenshot-overlay">
+                        <span className="testimonial-image-card__view-text">
+                          Click to view
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <div className="testimonial-image-card__screenshot-info">
+                      <div className="testimonial-image-card__rating">
+                        <div className="testimonial-image-card__stars">
+                          {renderStars(testimonial.rating)}
+                        </div>
+                        <div className="testimonial-image-card__date">
+                          {testimonial.date}
+                        </div>
+                      </div>
+                      
+                      <div className="testimonial-image-card__location">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                          <circle cx="12" cy="10" r="3"/>
+                        </svg>
+                        {testimonial.location}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
         </div>
@@ -961,9 +1221,7 @@ export const Home: React.FC = () => {
       <section className="final-cta">
         <div className="container">
           <div className="final-cta__content animate-on-scroll">
-            <div className="final-cta__badge">
-              <BsShieldCheck /> Limited Time Offer
-            </div>
+           
             <h2 className="final-cta__title">
               Start Your Investment Journey Today
             </h2>
@@ -973,13 +1231,11 @@ export const Home: React.FC = () => {
             </p>
 
             <div className="final-cta__pricing">
-              <span className="final-cta__old-price"></span>
-              <span className="final-cta__new-price">$14</span>
-             
+              <span className="final-cta__new-price">₦10,000</span>
             </div>
 
             <div className="final-cta__actions">
-              <Button variant="primary" size="lg" onClick={() => handleEnrollClick(allCourses[0])}>
+              <Button variant="primary" size="lg" onClick={() => navigate('/courses')}>
                 <span className="final-cta__icon">
                   <FaBullseye />
                 </span>
@@ -997,7 +1253,6 @@ export const Home: React.FC = () => {
                 View Free Preview
               </Button>
             </div>
-
           </div>
         </div>
 
@@ -1010,8 +1265,41 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
+      {/* Mouse Follower Glow */}
+      <div
+        className="mouse-follower"
+        style={{
+          left: `${mousePosition.x}px`,
+          top: `${mousePosition.y}px`
+        }}
+      ></div>
+
       {/* Payment Modal */}
       {renderPaymentModal()}
+
+      {/* Image Modal */}
+      {selectedImage && (
+        <div className="image-modal" onClick={handleCloseModal}>
+          <div className="image-modal__content" onClick={handleModalContentClick}>
+            <button className="image-modal__close" onClick={handleCloseModal}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
+            <img 
+              src={selectedImage} 
+              alt="Testimonial screenshot" 
+              className="image-modal__image"
+            />
+            <div className="image-modal__controls">
+              <button className="image-modal__control-btn" onClick={handleCloseModal}>
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

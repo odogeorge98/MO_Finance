@@ -1,6 +1,7 @@
 // src/pages/Courses/Courses.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import './Courses.css';
+import img2 from './img2.png';
 
 // React Icons
 import {
@@ -164,7 +165,7 @@ export const Courses: React.FC = () => {
       description: 'Comprehensive video library for self-paced learning. Access anytime, anywhere.',
       duration: 120,
       difficulty: 'Beginner',
-      thumbnail: 'https://images.unsplash.com/photo-1593305841991-05c297ba4575?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+      thumbnail: img2,
       instructor: 'Moses Mfon Udofia',
       rating: 4.7,
       category: 'Self-Paced',
@@ -732,7 +733,7 @@ export const Courses: React.FC = () => {
           <div className="grid-header">
             <div className="header-left">
               <h2 className="grid-title">
-                <span className="title-text">Premium Training Programs</span>
+                <span className="title-text"> Training Programs</span>
                 <div className="title-line"></div>
               </h2>
               <p className="grid-subtitle">Choose the learning style that matches your goals and schedule</p>
@@ -953,12 +954,7 @@ export const Courses: React.FC = () => {
                         <td>✅ Yes</td>
                         <td>✅ Yes</td>
                       </tr>
-                      <tr>
-                        <td>Certificate</td>
-                        <td>✅ Yes</td>
-                        <td>✅ Yes</td>
-                        <td>✅ Yes</td>
-                      </tr>
+                     
                       <tr>
                         <td>Price</td>
                         <td>₦20,000</td>

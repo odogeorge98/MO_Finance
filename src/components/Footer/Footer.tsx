@@ -22,7 +22,7 @@ export const Footer: React.FC = () => {
   const quickLinks = [
     { label: 'Home', path: '/' },
     { label: 'Courses', path: '/courses' },
-    { label: 'Features', path: '/features' },
+    // { label: 'Features', path: '/features' },
     { label: 'Blog', path: '/blog' },
     { label: 'About', path: '/about' },
     { label: 'Contact', path: '/contact' },
@@ -56,16 +56,9 @@ export const Footer: React.FC = () => {
               <FaBrain className="footer__logo-icon" />
             </div>
             <p className="footer__tagline">
-              Revolutionizing financial education with cutting-edge  technology.
+              Revolutionizing financial education with cutting-edge technology.
             </p>
-            <div className="footer__tech-badges">
-              <span className="footer__tech-badge">
-                <HiOutlineLightningBolt /> AI-Powered
-              </span>
-              <span className="footer__tech-badge">
-                <FaRocket /> Real-time
-              </span>
-            </div>
+            
           </div>
 
           <div className="footer__links-section">
@@ -91,11 +84,11 @@ export const Footer: React.FC = () => {
             <div className="footer__contact-info">
               <a href="mailto:hello@financeai.com" className="footer__contact-link">
                 <FaEnvelope />
-                <span>hello@financeai.com</span>
+                <span>mosesmfonundofia@gmail.com</span>
               </a>
               <a href="https://financeai.com" className="footer__contact-link">
                 <FaGlobe />
-                <span>www.financeai.com</span>
+                <span>www.finance.com</span>
               </a>
             </div>
             <div className="footer__newsletter">
