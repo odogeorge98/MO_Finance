@@ -15,7 +15,6 @@ import heroImage from './hero.png';
 // React Icons Imports
 import {
   FaPlay,
-  FaBookOpen,
   FaRocket,
   FaBullseye,
   FaChalkboardTeacher,
@@ -36,13 +35,10 @@ import {
   FaUniversity,
   FaPhoneAlt,
   FaUsers,
-  FaSearch,
+ 
   FaBolt,
   FaCalendarAlt,
   FaFire,
-  FaDollarSign,
-  FaBitcoin,
-  FaEthereum,
   FaUserTie,
   FaUserFriends,
   FaVideo as FaVideoIcon,
@@ -56,15 +52,12 @@ import {
 } from 'react-icons/bs';
 import {
   GiTeacher,
-  GiCash,
-  GiGoldBar
+ 
 } from 'react-icons/gi';
 import {
   MdOutlineWorkspacePremium
 } from 'react-icons/md';
-import {
-  IoDiamond
-} from 'react-icons/io5';
+
 
 type Stat = {
   value: number;
@@ -941,7 +934,7 @@ export const Home: React.FC = () => {
 
           {/* Courses Grid */}
           <div className="course-grid">
-            {allCourses.map((course, index) => (
+            {allCourses.map((course,) => (
               <div
                 key={course.id}
                 className={`course-card ${hoveredCard === course.id ? 'hovered' : ''}`}
