@@ -3363,3 +3363,106 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+
+/* Instructor avatar + glow */
+.instructor-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.instructor-avatar {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  min-width: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible; /* glow intentionally overflows */
+  transition: transform 180ms ease, box-shadow 180ms ease;
+  cursor: default;
+}
+
+/* actual image */
+.instructor-avatar__img {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  box-shadow: 0 6px 18px rgba(7, 12, 34, 0.12);
+  border: 2px solid rgba(255,255,255,0.5);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+/* subtle hover scale on the avatar card */
+.course-card:hover .instructor-avatar__img,
+.instructor-avatar:hover .instructor-avatar__img {
+  transform: scale(1.06);
+  box-shadow: 0 10px 26px rgba(7, 12, 34, 0.16);
+}
+
+/* glow behind avatar - uses a subtle radial gradient for brand-y glow */
+.avatar-glow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+  background: radial-gradient(circle at 50% 40%, rgba(99,102,241,0.14) 0%, rgba(99,102,241,0.06) 30%, rgba(99,102,241,0.00) 55%);
+  filter: blur(6px);
+  opacity: 1;
+  transition: transform 200ms ease, opacity 200ms ease;
+}
+
+/* shrink glow on small screens */
+@media (max-width: 480px) {
+  .instructor-avatar {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+  }
+  .instructor-avatar__img {
+    width: 48px;
+    height: 48px;
+  }
+  .avatar-glow {
+    width: 74px;
+    height: 74px;
+  }
+}
+
+/* instructor text area (name + rating) */
+.instructor-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.instructor-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-primary, #0f172a);
+}
+
+.instructor-rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted, #6b7280);
+  font-size: 0.85rem;
+}
+
+/* small tweak so avatar + text align visually */
+.instructor-info .instructor-avatar + .instructor-details {
+  transform: translateY(1px);
+}

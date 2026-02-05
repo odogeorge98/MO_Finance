@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Courses.css';
 import img2 from './img2.png';
+import mosesImg from './moses.jpg';
 
 // React Icons
 import {
@@ -39,7 +40,7 @@ import {
   BsCheckCircleFill,
   BsArrowRight
 } from 'react-icons/bs';
-import {  GiCircuitry, GiCash, GiGoldBar, GiTeacher } from 'react-icons/gi';
+import {  GiCircuitry, GiCash, GiGoldBar } from 'react-icons/gi';
 import { IoDiamond, } from 'react-icons/io5';
 
 interface PaymentDetails {
@@ -872,10 +873,15 @@ export const Courses: React.FC = () => {
 
                   {/* Instructor */}
                   <div className="instructor-info">
-                    <div className="instructor-avatar">
-                      <GiTeacher />
-                      <div className="avatar-glow"></div>
-                    </div>
+                  <div className="instructor-avatar">
+  <img
+    src={mosesImg}
+    alt={course.instructor}
+    className="instructor-avatar__img"
+    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+  />
+  <div className="avatar-glow"></div>
+</div>
                     <div className="instructor-details">
                       <div className="instructor-name">{course.instructor}</div>
                       <div className="instructor-rating">

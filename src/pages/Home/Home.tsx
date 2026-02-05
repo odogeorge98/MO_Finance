@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '../../components/Button/Button';
 import { StatsCounter } from '../../components/StatsCounter/StatsCounter';
 import './Home.css';
+import mosesImg from './moses.jpg';
 
 // Import testimonial images
 import testimonial1 from './tes1.jpeg';
@@ -50,10 +51,7 @@ import {
   BsArrowRight,
   BsPlayCircle
 } from 'react-icons/bs';
-import {
-  GiTeacher,
- 
-} from 'react-icons/gi';
+
 import {
   MdOutlineWorkspacePremium
 } from 'react-icons/md';
@@ -1047,9 +1045,14 @@ export const Home: React.FC = () => {
                   {/* Instructor */}
                   <div className="instructor-info">
                     <div className="instructor-avatar">
-                      <GiTeacher />
-                      <div className="avatar-glow"></div>
-                    </div>
+  <img
+    src={mosesImg}
+    alt={course.instructor}
+    className="instructor-avatar__img"
+    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+  />
+  <div className="avatar-glow"></div>
+</div>
                     <div className="instructor-details">
                       <div className="instructor-name">{course.instructor}</div>
                       <div className="instructor-rating">
@@ -1059,6 +1062,20 @@ export const Home: React.FC = () => {
                     </div>
                   </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                   {/* Price & Action */}
                   <div className="card-footer">
                     <div className="pricing">
@@ -1066,7 +1083,7 @@ export const Home: React.FC = () => {
                       <div className="current-price">
                         {course.priceDetails?.naira}
                         <div className="discount-badge">
-                          {course.category === 'One-on-One' ? 'Premium' : 
+                          {course.category === 'One-on-One' ? '' : 
                            course.category === 'Group Training' ? 'Best Value' : 'Self-Paced'}
                         </div>
                       </div>
