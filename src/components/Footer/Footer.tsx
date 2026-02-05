@@ -10,7 +10,6 @@ import {
   FaInstagram,
   FaEnvelope,
   FaGlobe,
-  FaRocket,
   FaBrain
 } from 'react-icons/fa';
 import { HiOutlineLightningBolt } from 'react-icons/hi';
